@@ -1,7 +1,5 @@
 package com.example.backend.service;
 
-package com.hms.service;
-
 import com.hms.entity.Appointment;
 import com.hms.entity.Patient;
 import com.hms.entity.User;
@@ -132,6 +130,32 @@ public class AppointmentService {
                     return appointmentRepository.save(appointment);
                 })
                 .orElseThrow(() -> new RuntimeException("Appointment not found"));
+    }
+    
+    @Transactional
+    public Appointment startAppointment(Long appointmentId) {
+        return appointmentRepository.findById(appointmentId)
+                .map(appointment -> {
+                    appointment.setStatus(Appointment.AppointmentStatus.IN_PROGRESS);
+                    appointment.setActualVisitTime(LocalDateTime.now());
+                    return appointmentRepository.save(appointment);
+                })
+                .orElseThrow(() -> new RuntimeException("Appointment not found"));
+    }
+    
+    @Transactional(readOnly = true)
+    public boolean isDoctorAvailable(User doctor, LocalDate date, LocalTime time) {
+        // Check for existing appointments at the same time
+        List<Appointment> existingAppointments = appointmentRepository
+                .findAppointmentsByDoctorAndDateRange(doctor.getId(), date, date);
+        
+        LocalDateTime requestedTime = LocalDateTime.of(date, time);
+        LocalDateTime endTime = requestedTime.plusMinutes(30);
+        
+        return existingAppointments.stream()
+                .noneMatch(apt -> isTimeConflict(requestedTime, endTime, 
+                        LocalDateTime.of(apt.getAppointmentDate(), apt.getAppointmentTime()),
+                        LocalDateTime.of(apt.getAppointmentDate(), apt.getAppointmentTime()).plusMinutes(apt.getDurationMinutes())));
     }
     
     private boolean isTimeConflict(LocalDateTime start1, LocalDateTime end1, LocalDateTime start2, LocalDateTime end2) {
