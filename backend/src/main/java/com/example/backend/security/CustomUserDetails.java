@@ -1,7 +1,5 @@
 package com.example.backend.security;
 
-package com.hms.security;
-
 import com.hms.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
