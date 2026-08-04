@@ -10,6 +10,8 @@ import org.thymeleaf.templatemode.TemplateMode;
 @Configuration
 public class ThymeleafConfig {
 
+    /**
+     */
     @Bean
     public SpringResourceTemplateResolver externalTemplateResolver() {
         SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
@@ -23,6 +25,9 @@ public class ThymeleafConfig {
         return resolver;
     }
 
+    /**
+     * 
+     */
     @Bean
     public SpringSecurityDialect securityDialect() {
         return new SpringSecurityDialect();
