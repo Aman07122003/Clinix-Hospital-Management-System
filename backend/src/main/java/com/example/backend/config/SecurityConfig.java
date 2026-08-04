@@ -24,6 +24,9 @@ import java.util.List;
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
     
+    /**
+     * 
+     */
     private final CustomUserDetailsService customUserDetailsService;
     
     public SecurityConfig(CustomUserDetailsService customUserDetailsService) {
@@ -31,12 +34,17 @@ public class SecurityConfig {
     }
     
 
-    
+    /**
+     * 
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
     
+    /**
+     * 
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
