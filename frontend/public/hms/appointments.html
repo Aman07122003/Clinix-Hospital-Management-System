@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Schedule Management')}"></head>
+<body class="bg-slate-50/50">
+    <header th:replace="~{fragments/navbar :: navbar}"></header>
+    
+    <div class="mx-auto flex max-w-[1600px]">
+        <div th:replace="~{fragments/sidebar :: sidebar('appointments', ${role})}"></div>
+        
+        <main class="min-h-[calc(100vh-4rem)] w-full p-6 pt-8 lg:ml-72 lg:p-10">
+            <!-- Header -->
+            <section class="mb-10 flex flex-wrap items-end justify-between gap-6">
+                <div class="space-y-1">
+                    <div class="flex items-center gap-2 text-xs font-bold text-blue-600 uppercase tracking-widest">
+                        <i data-lucide="calendar" class="w-3 h-3"></i>
+                        <span>Portal / Appointments</span>
+                    </div>
+                    <h1 class="text-4xl font-extrabold tracking-tight text-slate-900">Appointment <span class="text-blue-600">Hub</span></h1>
+                    <p class="text-slate-500 font-medium italic">Viewing all clinical schedules and availability.</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button data-modal-open="appointment-modal" class="bg-blue-600 text-white px-8 py-3 rounded-2xl font-bold shadow-xl shadow-blue-500/20 hover:bg-blue-700 hover:scale-105 transition-all flex items-center gap-2">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        <span>New Booking</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Calendar and Slots Grid -->
+            <div class="grid gap-8 lg:grid-cols-12">
+                
+                <!-- Calendar Card -->
+                <div class="lg:col-span-8">
+                    <article class="bg-white rounded-[2.5rem] border border-slate-100 p-8 shadow-sm hms-shadow" data-calendar-root data-calendar-initial-view="month">
+                        <div class="flex items-center justify-between mb-8">
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-900" data-calendar-label>April 2026</h3>
+                                <p class="text-xs font-bold text-slate-400 mt-0.5 uppercase tracking-widest">Select a date to view slots</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="flex bg-slate-100 p-1 rounded-xl mr-2">
+                                    <button class="px-4 py-1.5 text-xs font-bold rounded-lg transition-all" data-calendar-view-btn="month" data-active="true">Month</button>
+                                    <button class="px-4 py-1.5 text-xs font-bold rounded-lg transition-all" data-calendar-view-btn="week" data-active="false">Week</button>
+                                </div>
+                                <div class="flex gap-1">
+                                    <button class="p-2 rounded-xl border border-slate-200 hover:bg-slate-50 transition-all" data-calendar-nav="prev">
+                                        <i data-lucide="chevron-left" class="w-4 h-4 text-slate-600"></i>
+                                    </button>
+                                    <button class="p-2 rounded-xl border border-slate-200 hover:bg-slate-50 transition-all" data-calendar-nav="next">
+                                        <i data-lucide="chevron-right" class="w-4 h-4 text-slate-600"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Calendar Grid -->
+                        <div class="grid grid-cols-7 gap-2 mb-2 text-center" data-weekdays-row></div>
+                        <div class="grid grid-cols-7 gap-2" data-calendar-grid></div>
+                    </article>
+                </div>
+
+                <!-- Side Info -->
+                <div class="lg:col-span-4 flex flex-col gap-8">
+                    
+                    <!-- Quick Availability -->
+                    <div class="bg-white rounded-[2.5rem] border border-slate-100 p-8 shadow-sm">
+                        <h3 class="text-lg font-bold mb-6 flex items-center gap-3">
+                            <i data-lucide="clock" class="w-5 h-5 text-indigo-600"></i>
+                            Select Time Slot
+                        </h3>
+                        <div class="grid grid-cols-2 gap-3 mb-8">
+                            <button class="group py-3 px-4 rounded-2xl border-2 border-slate-50 bg-slate-50 text-sm font-bold text-slate-500 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600 transition-all active:scale-95" data-time-slot data-slot="09:00">09:00 AM</button>
+                            <button class="group py-3 px-4 rounded-2xl border-2 border-slate-50 bg-slate-50 text-sm font-bold text-slate-500 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600 transition-all active:scale-95" data-time-slot data-slot="10:30">10:30 AM</button>
+                            <button class="group py-3 px-4 rounded-2xl border-2 border-slate-50 bg-slate-50 text-sm font-bold text-slate-500 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600 transition-all active:scale-95" data-time-slot data-slot="11:00">11:00 AM</button>
+                            <button class="group py-3 px-4 rounded-2xl border-2 border-slate-50 bg-slate-50 text-sm font-bold text-slate-500 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600 transition-all active:scale-95" data-time-slot data-slot="02:20">02:20 PM</button>
+                        </div>
+
+                        <div class="space-y-4 pt-6 border-t border-slate-50">
+                             <div class="flex items-center justify-between text-xs font-bold">
+                                 <span class="text-slate-400">STATUS GUIDE</span>
+                             </div>
+                             <div class="flex flex-wrap gap-2">
+                                 <span class="badge badge-pending">Pending Approval</span>
+                                 <span class="badge badge-confirmed">Confirmed Visited</span>
+                                 <span class="badge badge-completed">Fully Completed</span>
+                                 <span class="badge badge-cancelled">Cancelled</span>
+                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Call to Action -->
+                    <div class="bg-slate-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden hms-shadow group">
+                         <div class="absolute -top-10 -left-10 w-40 h-40 bg-blue-600/20 rounded-full blur-3xl group-hover:bg-blue-600/40 transition-all"></div>
+                         <h3 class="text-xl font-bold mb-2">Virtual Care</h3>
+                         <p class="text-slate-400 text-xs mb-6 font-medium leading-relaxed">Book a telehealth session if you cannot visit the clinic in person.</p>
+                         <button class="w-full py-3.5 rounded-2xl bg-blue-600 text-white font-bold text-sm hover:bg-blue-500 transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-900/40">
+                             <i data-lucide="video" class="w-4 h-4"></i>
+                             Start Virtual Consultation
+                         </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Booking Modal -->
+            <div id="appointment-modal" data-modal class="fixed inset-0 z-[60] hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+                <div class="w-full max-w-xl bg-white rounded-[2.5rem] p-10 shadow-2xl animate-in zoom-in-95 duration-300">
+                    <div class="flex items-center justify-between mb-8">
+                        <div>
+                            <h3 class="text-2xl font-black text-slate-900">Manage Booking</h3>
+                            <p class="text-sm text-slate-500 font-medium">Create or update appointment details.</p>
+                        </div>
+                        <button data-modal-close class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-slate-100 hover:text-slate-900 transition-all">
+                             <i data-lucide="x" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                    
+                    <form class="space-y-6" id="appointmentForm" data-validate-form="true">
+                        <div class="grid gap-6 sm:grid-cols-2">
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold text-slate-400 uppercase ml-1">Patient Name</label>
+                                <input id="patientName" class="w-full rounded-2xl border-slate-100 bg-slate-50 px-4 py-3.5 text-sm font-medium outline-none focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500" placeholder="Search patient..." data-required="true" />
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold text-slate-400 uppercase ml-1">Assigned Physician</label>
+                                <select id="doctorName" class="w-full rounded-2xl border-slate-100 bg-slate-50 px-4 py-3.5 text-sm font-bold outline-none focus:bg-white appearance-none text-slate-700" data-required="true">
+                                    <option value="">Select Doctor</option>
+                                    <option value="1">Dr. John Doe (General Medicine)</option>
+                                    <option value="2">Dr. Michael Chen (Cardiology)</option>
+                                    <option value="3">Dr. Sarah Wilson (Surgery)</option>
+                                    <option value="4">Dr. Emily Brown (Neurology)</option>
+                                    <option value="5">Dr. Robert Miller (Pediatrics)</option>
+                                    <option value="6">Dr. Jessica Taylor (Orthopedics)</option>
+                                </select>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold text-slate-400 uppercase ml-1">Visit Date</label>
+                                <input id="date" name="appointmentDate" type="date" class="w-full rounded-2xl border-slate-100 bg-slate-50 px-4 py-3.5 text-sm font-medium outline-none focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500" data-required="true" />
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold text-slate-400 uppercase ml-1">Visit Time</label>
+                                <input id="time" type="time" class="w-full rounded-2xl border-slate-100 bg-slate-50 px-4 py-3.5 text-sm font-medium outline-none focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500" data-required="true" />
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-slate-400 uppercase ml-1">Initial Status</label>
+                            <select id="status" class="w-full rounded-2xl border-slate-100 bg-slate-50 px-4 py-3.5 text-sm font-bold outline-none focus:bg-white appearance-none">
+                                <option>Pending</option>
+                                <option>Confirmed</option>
+                                <option>Completed</option>
+                                <option>Cancelled</option>
+                            </select>
+                        </div>
+
+                        <div class="flex items-center justify-end gap-3 pt-6 border-t border-slate-50 mt-4">
+                            <button type="button" data-modal-close class="px-6 py-3.5 rounded-2xl font-bold text-slate-500 hover:bg-slate-50 transition-all">Cancel</button>
+                            <button type="submit" class="bg-blue-600 text-white px-10 py-3.5 rounded-2xl font-bold shadow-xl shadow-blue-500/20 hover:bg-blue-700 active:scale-95 transition-all">Confirm Session</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- Appointments List -->
+            <section class="mt-12 bg-white rounded-[2.5rem] border border-slate-100 p-8 shadow-sm hms-shadow">
+                <div class="flex items-center justify-between mb-8">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-900">Patient Registry / <span class="text-blue-600">My Appointments</span></h3>
+                        <p class="text-xs font-bold text-slate-400 mt-1 uppercase tracking-widest">Tracking your upcoming and history consultations</p>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="border-b border-slate-50 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                                <th class="px-4 pb-4">Physician</th>
+                                <th class="px-4 pb-4">Date & Time</th>
+                                <th class="px-4 pb-4">Department</th>
+                                <th class="px-4 pb-4">Status</th>
+                                <th class="px-4 pb-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-50" id="appointmentsTableBody">
+                            <!-- Example Row -->
+                            <tr class="group hover:bg-slate-50/50 transition-all">
+                                <td class="px-4 py-6">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 font-bold text-xs">JD</div>
+                                        <div>
+                                            <p class="text-sm font-black text-slate-900 leading-tight">Dr. John Doe</p>
+                                            <p class="text-[10px] font-bold text-slate-400">Cardiology Specialist</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-6">
+                                    <p class="text-sm font-bold text-slate-900">April 25, 2026</p>
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase">10:30 AM</p>
+                                </td>
+                                <td class="px-4 py-6 font-bold text-xs text-slate-600">Cardiology</td>
+                                <td class="px-4 py-6"><span class="badge badge-confirmed">Scheduled</span></td>
+                                <td class="px-4 py-6 text-right">
+                                    <button class="w-9 h-9 rounded-lg border border-slate-200 flex items-center justify-center text-slate-400 hover:text-red-600 hover:border-red-100 transition-all">
+                                        <i data-lucide="calendar-x" class="w-4 h-4"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div data-toast class="toast glass flex items-center gap-3 shadow-2xl"></div>
+    <script th:src="@{/hms/assets/hms.js}" src="/hms/assets/hms.js"></script>
+</body>
+</html>
